@@ -43,15 +43,28 @@ def conseguir_lista_bacha():
     df_filtrado = df_lista_bacha.loc[mask]
     df_final = pd.concat([df_filtrado['Unnamed: 0'], df_filtrado['Unnamed: 4'], df_filtrado['Unnamed: 18']], axis = 1, keys=['id_bacha','name_bacha','precio_bacha'])
     if no_hay_huecos(df_final):
-        print('df_final conseguido tiene', df_final.shape[0], 'productos')
+        print('la lista nueva conseguida tiene', df_final.shape[0], 'productos')
         return df_final
     else:
         print('chequear NaN')
 
+def leer_clave():
+    df = pd.read_excel('lucas.xlsx')
+    return df
+
+def leer_filtro():
+    ids = pd.read_csv('D:\\cositas\\NeoClean_Actualizator\\claves\\id_bacha_filtro.csv')['id_bacha'].tolist()
+    return ids
+
 if __name__ == '__main__':
 
     lista_bacha = conseguir_lista_bacha()
-
     #print(aplicar_recargo(lista_bacha, 50))
 
-    lista_bacha.to_csv('lista_bacha.csv')
+    
+    #clave = leer_clave()
+    #clave.to_csv('clave_lucas.csv')
+    ids = leer_filtro()
+    filtered_df = lista_bacha[lista_bacha['id_bacha'].isin(ids)]
+    print("Se encontraron", filtered_df.shape[0], "productos validos segun la clave")
+    filtered_df.to_csv('../lista_bacha.csv')
